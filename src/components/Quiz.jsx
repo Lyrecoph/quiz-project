@@ -3,7 +3,7 @@
 // et lorsque l'uitilisateur à répondu à la question je peux passer 
 // à une autre question et d'enregistrer les réponses de l'utilisateur
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import QUESTIONS from '../questions.js';
 import quizCompleteImg from '../assets/quiz-complete.png';
@@ -21,12 +21,14 @@ export default function Quiz(){
     // le nbre de réponse doit être égal au nbre de question
     const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
-    function handleSelectAnswer(selectedAnswer){
+    const handleSelectAnswer = useCallback (function handleSelectAnswer(selectedAnswer){
         // permet de stocker la réponses sélectionnées dans un tableau
         setUserAnswers((prevUserAnswers) => {
             return [...prevUserAnswers, selectedAnswer]
         })
-    }
+    }, []);
+
+    const handleSkipAnswer = useCallback(() => handleSelectAnswer(null), [handleSelectAnswer]);
 
     if(quizIsComplete){
         return (
@@ -49,7 +51,7 @@ export default function Quiz(){
                 une fois que le délai a expiré */}
                 <QuestionTimer 
                     timeout={10000}
-                    onTimeout={() => handleSelectAnswer(null)} 
+                    onTimeout={handleSkipAnswer} 
                 />
                 <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
                 <ul id="answers">
