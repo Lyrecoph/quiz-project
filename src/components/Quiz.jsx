@@ -6,6 +6,7 @@
 import { useState } from "react";
 
 import QUESTIONS from '../questions.js';
+import quizCompleteImg from '../assets/quiz-complete.png';
 
 export default function Quiz(){
     // Etat qui gère l'enregistrement des réponses sélectionnées par l'utilisateur
@@ -14,6 +15,10 @@ export default function Quiz(){
     // dérive l'index de la question à partir des éléments de réponse 
     // se trouvant dans le tableau de question
     const activeQuestionIndex = userAnswers.length;
+    
+
+    // le nbre de réponse doit être égal au nbre de question
+    const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
     function handleSelectAnswer(selectedAnswer){
         // permet de stocker la réponses sélectionnées dans un tableau
@@ -21,12 +26,25 @@ export default function Quiz(){
             return [...prevUserAnswers, selectedAnswer]
         })
     }
+
+    if(quizIsComplete){
+        return (
+            <div id="summary">
+                <img src={quizCompleteImg} alt="Trophy icon" />
+                <h2>Quiz Completed !</h2>
+            </div>
+        )
+    }
+    // recupère les réponses d'une question
+    const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
+    // mélange les réponses 
+    shuffledAnswers.sort(() => Math.random() - 0.5);
     
     return(
         <div id="question">
             <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
             <ul id="answers">
-                {QUESTIONS[activeQuestionIndex].answers.map((answer) => (
+                {shuffledAnswers.map((answer) => (
                     <li key={answer} className="answer">
                         <button onClick={() => handleSelectAnswer(answer)}>{answer}</button>
                     </li>
