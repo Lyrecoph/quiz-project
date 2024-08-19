@@ -50,6 +50,7 @@ export default function Quiz(){
                 du délai d'attente, une fonction doit bien sûr être exécutée 
                 une fois que le délai a expiré */}
                 <QuestionTimer 
+                    key={activeQuestionIndex}
                     timeout={10000}
                     onTimeout={handleSkipAnswer} 
                 />
