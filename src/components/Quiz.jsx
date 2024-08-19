@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import QUESTIONS from '../questions.js';
 import quizCompleteImg from '../assets/quiz-complete.png';
+import QuestionTimer from "./QuestionTimer.jsx";
 
 export default function Quiz(){
     // Etat qui gère l'enregistrement des réponses sélectionnées par l'utilisateur
@@ -39,17 +40,26 @@ export default function Quiz(){
     const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
     // mélange les réponses 
     shuffledAnswers.sort(() => Math.random() - 0.5);
-    
+
     return(
-        <div id="question">
-            <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-            <ul id="answers">
-                {shuffledAnswers.map((answer) => (
-                    <li key={answer} className="answer">
-                        <button onClick={() => handleSelectAnswer(answer)}>{answer}</button>
-                    </li>
-                ))}
-            </ul>
+        <div id="quiz">
+            <div id="question">
+                {/* timeout est la durée de la minuterie, en cas de dépassement 
+                du délai d'attente, une fonction doit bien sûr être exécutée 
+                une fois que le délai a expiré */}
+                <QuestionTimer 
+                    timeout={10000}
+                    onTimeout={() => handleSelectAnswer(null)} 
+                />
+                <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
+                <ul id="answers">
+                    {shuffledAnswers.map((answer) => (
+                        <li key={answer} className="answer">
+                            <button onClick={() => handleSelectAnswer(answer)}>{answer}</button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     )
 }
